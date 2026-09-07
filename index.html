@@ -319,8 +319,9 @@
     </header>
     <div style="background-color: #fcf8f2; border: 1px dashed var(--color-gold); padding: 15px 20px; border-radius: 10px; max-width: 750px; margin: 30px auto; text-align: center; color: var(--text-dark); font-size: 0.95rem; line-height: 1.6;">
         💡 <strong>溫馨小提醒：</strong><br>
-        • 建議使用<strong>電腦</strong>開啟網頁，以獲得最佳的瀏覽與視覺體驗。<br>
-        • 記得點擊畫面右下角的按鈕<strong>打開音樂</strong>呦！ 🎵
+        • 建議使用<strong>電腦</strong>開啟網頁，以獲得最佳的瀏覽體驗。<br>
+        • 手機開網頁時，請先等個 3 至 5 秒讓背景程式完全載入。<br>
+        • 記得點擊畫面右下角的按鈕<strong>打開音樂</strong>呦！若音樂無法播放，可以按下暫停再播放一次即可 🎵
     </div>
     <!-- 邀請詞區塊 -->
     <section class="bg-sage full-bleed">
@@ -519,7 +520,7 @@
 
         function toggleMusic() {
             if (!player || typeof player.playVideo !== 'function') {
-                alert("播放器尚在載入中，請稍候再試一次！");
+                alert("播放器尚在載入中，請先等 3 至 5 秒，或嘗試點擊「暫停」後再按一次播放喔");
                 return;
             }
 
