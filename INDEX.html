@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>育政&華的婚禮邀請函</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-sage: #a3bfa8;      
+            --color-cream: #fffcf0;     
+            --color-rose: #e0b1b1;      
+            --color-blue: #b9cfe5;      
+            --color-gold: #c4a77d;      
+            --text-dark: #5c554a;       
+            --text-light: #7a7267;      
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            color: var(--text-dark);
+            background-color: var(--color-cream);
+            line-height: 1.8;
+        }
+
+        /* 漂浮音樂播放按鈕 */
+        .music-float-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--white);
+            color: var(--text-dark);
+            padding: 10px 18px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            border: 2px solid var(--color-gold);
+            transition: all 0.3s ease;
+        }
+        .music-float-btn:hover {
+            background-color: var(--color-gold);
+            color: var(--white);
+            transform: scale(1.05);
+        }
+        .music-icon {
+            animation: spin 4s linear infinite;
+            display: inline-block;
+        }
+        .paused {
+            animation-play-state: paused;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 封面 Banner 區塊 */
+        .hero {
+            height: 125vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('ONE00646.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 25vh 20px 0 20px;
+        }
+
+        .hero h3 { 
+            font-family: 'Playfair Display', serif; 
+            letter-spacing: 5px; 
+            font-size: 1.3rem; 
+            margin-bottom: 15px; 
+            text-transform: uppercase; 
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6); 
+        }
+        .hero h1 { 
+            font-size: 3.5rem; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            letter-spacing: 8px; 
+            font-family: 'Playfair Display', serif; 
+            text-shadow: 0 3px 10px rgba(0,0,0,0.6); 
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            letter-spacing: 3px; 
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6); 
+        }
+
+        /* 內容區塊通用樣式 */
+        section { padding: 80px 20px; max-width: 850px; margin: 0 auto; text-align: center; }
+
+        /* 滿版區塊專用樣式 */
+        section.full-bleed {
+            max-width: 100%;
+            width: 100%;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        section h2 { font-family: 'Playfair Display', serif; color: var(--text-dark); font-size: 3.2rem; margin-bottom: 15px; position: relative; display: inline-block; }
+        
+        .fancy-title::before, .fancy-title::after {
+            content: '✽';
+            color: var(--color-gold);
+            font-size: 1.2rem;
+            vertical-align: middle;
+        }
+        .fancy-title::before { margin-right: 15px; }
+        .fancy-title::after { margin-left: 15px; }
+
+        .divider { width: 60px; height: 4px; background-color: var(--color-rose); margin: 15px auto 40px auto; border-radius: 2px; }
+        .invitation-text { font-size: 1.4rem; color: var(--text-light); margin-bottom: 30px; font-weight: 400; }
+
+        .bg-sage { background-color: var(--color-sage); color: var(--white); }
+        .bg-sage h2 { color: var(--white); }
+        .bg-sage .invitation-text { color: rgba(255,255,255,0.9); }
+        .bg-sage .divider { background-color: var(--white); }
+
+        .bg-cream { background-color: var(--color-cream); }
+        .bg-blue { background-color: var(--color-blue); }
+
+        /* 照片輪播樣式 (依 2668 x 4000 比例設定) */
+        .gallery-section { padding: 40px 0; overflow: hidden; background-color: var(--color-cream); }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 520px;          
+            aspect-ratio: 2668 / 4000;  
+            margin: 0 auto;
+            overflow: hidden;
+            background-color: #2b2825;
+        }
+        .slide { 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.8s ease-in-out; 
+        }
+        .slide.active { 
+            display: block; 
+            opacity: 1; 
+        }
+
+        .slide-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(25px) brightness(0.55);
+            transform: scale(1.1);
+            z-index: 1;
+        }
+
+        .slide img { 
+            position: relative;
+            z-index: 2;
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            display: block;
+            margin: 0 auto;
+        }
+
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; padding: 20px; color: var(--white); font-size: 20px; background-color: rgba(0,0,0,0.3); border-radius: 50%; margin: -25px 20px 0 20px; transition: 0.3s; z-index: 10; }
+        .next { right: 0; }
+        .prev:hover, .next:hover { background-color: rgba(0,0,0,0.6); }
+        .dot-container { text-align: center; padding: 20px 0 0 0; }
+        .dot { cursor: pointer; height: 12px; width: 12px; margin: 0 6px; background-color: #d4cbb9; border-radius: 50%; display: inline-block; transition: 0.3s; }
+        .active-dot, .dot:hover { background-color: var(--color-gold); transform: scale(1.1); }
+
+        /* 婚禮資訊卡片樣式優化 */
+        .info-grid-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; margin-top: 40px; text-align: left; }
+        .info-card {
+            background: var(--white);
+            padding: 35px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            color: var(--text-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-gold), var(--color-rose));
+        }
+        .info-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            color: var(--color-gold);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .info-card p { margin-bottom: 10px; font-size: 1rem; }
+        
+        .card-divider {
+            border: none;
+            border-top: 1px dashed #e0dcd0;
+            margin: 15px 0;
+        }
+        .sub-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            background-color: #fbf8f2;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border-left: 3px solid var(--color-gold);
+            line-height: 1.6;
+        }
+
+        .card-photo {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-top: 15px;
+            border: 1px solid #e0dcd0;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+            border: 1px solid #e0dcd0;
+        }
+
+        .form-container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 1rem;
+            color: var(--white);
+            background-color: var(--color-sage);
+            border-top: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero { 
+                height: 100vh; 
+                background-size: contain !important; 
+                background-repeat: no-repeat !important; 
+                background-color: #2b2825 !important; 
+                background-position: center center !important; 
+            }
+            .hero h1 { font-size: 2.5rem; letter-spacing: 5px; }
+            section { padding: 60px 20px; }
+            section h2 { font-size: 2rem; }
+            .slider-container { max-width: 90vw; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 漂浮音樂播放按鈕 -->
+    <div class="music-float-btn" onclick="toggleMusic()">
+        <span class="music-icon paused" id="m-icon">🎵</span>
+        <span id="music-status">播放音樂</span>
+    </div>
+
+    <!-- YouTube 隱藏播放器與 API -->
+    <div id="youtube-player" style="display:none;"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- 封面 Banner 區塊 -->
+    <header class="hero">
+        <h3>✨ Save The Date ✨</h3>
+        <h1>育政 & 華</h1>
+        <p>2027.01.17 (Sun.)</p>
+    </header>
+
+    <!-- 邀請詞區塊 -->
+    <section class="bg-sage full-bleed">
+        <h2 class="fancy-title">Invitation</h2>
+        <div class="divider"></div>
+        <p class="invitation-text">
+             ✨ 從青澀的年少時光，到攜手走過彼此身邊的十個年頭。<br>
+            我們一路相伴，見證了彼此的成長、蛻變與無數珍貴的日常。<br><br>
+            這十年淬鍊出的豐碩成果，最想與一路支持、陪伴著我們的您分享。<br>
+            誠摯邀請您蒞臨，一同見證我們十年長跑的幸福綻放。 💕
+        </p>
+    </section>
+
+    <!-- 照片輪播 -->
+    <div class="bg-cream gallery-section">
+        <div class="slider-container">
+            <div class="slide active">
+                <div class="slide-bg" style="background-image: url('1.jpg');"></div>
+                <img src="ONE00081.jpg" alt="婚紗照 1">
+            </div>
+            <div class="slide">
+                <div class="slide-bg" style="background-image: url('2.jpg');"></div>
+                <img src="ONE00216.jpg" alt="婚紗照 2">
+            </div>
+            <div class="slide">
+                <div class="slide-bg" style="background-image: url('3.jpg');"></div>
+                <img src="ONE00665.jpg" alt="婚紗照 3">
+            </div>
+            <div class="slide">
+                <div class="slide-bg" style="background-image: url('4.jpg');"></div>
+                <img src="ONE00539.jpg" alt="婚紗照 4">	
+            </div>
+
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+        <div class="dot-container">
+            <span class="dot active-dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+        </div>
+    </div>
+
+    <!-- 婚禮資訊 -->
+    <section class="bg-sage full-bleed">
+        <div class="info-grid-wrapper">
+            <h2 class="fancy-title">Wedding Details</h2>
+            <div class="divider"></div>
+            
+            <div class="info-grid">
+                <!-- 時間卡片 -->
+                <div class="info-card">
+                    <h3>Time & Schedule</h3>
+                    <p><strong>日期：</strong>2027年1月17日（日）</p>
+                    <p><strong>迎賓：</strong>11:30 入場交誼</p>
+                    <p><strong>開席：</strong>12:00 準時入席（午宴）</p>
+                    
+                    <hr class="card-divider">
+                    
+                    <div class="sub-info">
+                        📌 <strong>貼心提醒：</strong><br>
+                        • 停車場車位有限，建議盡量搭乘大眾運輸工具。<br>
+                        • 會場備有兒童安全座椅，如有需求請提前告知我們。
+                    </div>
+
+                    <div class="sub-info" style="margin-top: 10px;">
+                        🎁 <strong>活動預告：</strong><br>
+                        • 現場備有拍立得互動區，歡迎留下您與新人的美好合影！<br>
+                        • 懇請大家進場多拍拍照，並填寫給新人的祝福小卡。
+                    </div>
+
+                    <img src="ONE00297.jpg" alt="我們的小相片" class="card-photo">
+                </div>
+
+                <!-- 地點卡片 -->
+                <div class="info-card">
+                    <h3>Location & Transport</h3>
+                    <p><strong>地點：</strong>誠品行旅 The Eslite Hotel</p>
+                    <p><strong>廳別：</strong>2F 宴會廳</p>
+                    <p><strong>地址：</strong>台北市信義區菸廠路 98 號</p>
+                    
+                    <hr class="card-divider">
+                    
+                    <div class="sub-info">
+                        🚇 <strong>捷運路線：</strong><br>
+                        • <strong>國父紀念館站（5號出口）：</strong>沿光復南路步行左轉菸廠路，約 8-10 分鐘。<br>
+                        • <strong>市政府站（1號出口）：</strong>沿忠孝東路步行右轉基隆路/菸廠路，約 8-10 分鐘。<br><br>
+                        🚌 <strong>公車資訊：</strong><br>
+                        • <strong>聯合報站：</strong>212、232、240、270、299、919 等，步行約 6 分鐘。<br>
+                        • <strong>捷運國父紀念館站（光復）：</strong>204、254、282、288 等。<br><br>
+                        🚅 <strong>高鐵 / 台鐵 / 客運轉乘：</strong><br>
+                        • 搭至**台北車站**或**南港車站**，轉乘板南線（藍線）捷運至「國父紀念館站」或「市政府站」下車即可。<br><br>
+                        🚗 <strong>停車資訊：</strong><br>
+                        • 備有地下停車場，可配合飯店/松菸文創園區停車折抵。
+                    </div>
+
+                    <!-- Google Map 內嵌 -->
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3614.6902858016642!2d121.55944457595643!3d25.044582637864334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abbf1b4159c7%3A0xb294f64e22f2a572!2z6K-a5ZOB6KGM5peF!5e0!3m2!1szh-CN!2stw!4v1788758186548!5m2!1szh-CN!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    </div>
+                    
+                    <!-- 手機專屬：一鍵導航按鈕 -->
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="https://www.google.com/maps/search/?api=1&query=25.044191,121.560668&query_place_id=ChIJN1QoKQTq2jQRzIiI_A8EWU4" target="_blank" style="display: inline-block; background-color: var(--color-gold); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                            🗺️ 點擊開啟 Google Maps 導航
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP 出席確認區塊 -->
+    <div id="rsvp" class="bg-blue" style="padding: 80px 20px;">
+        <section style="padding: 0; max-width: 800px;">
+            <h2 class="fancy-title" style="color: var(--text-dark);"> 出席確認</h2>
+            <div class="divider" style="background-color: var(--color-gold);"></div>
+            <p class="invitation-text" style="color: var(--text-dark);">懇請您於 <strong>2026.09.31</strong> 前協助填寫下方表單，以便我們統計人數與安排席位。 💌</p>
+            
+            <div class="form-container">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScQT9q41Opdr9qAGlyr9INzIm7wgkIitlj49jtKjEVBDRYFPA/viewform?embedded=true" width="100%" height="1200" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2027 Jack & Rose Wedding. All Rights Reserved. 🥂</p>
+    </footer>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // 輪播控制
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        function plusSlides(n) { showSlides(slideIndex += n); }
+        function currentSlide(n) { showSlides(slideIndex = n); }
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none"; 
+                slides[i].classList.remove("active"); 
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", ""); 
+            }
+            slides[slideIndex-1].style.display = "block";
+            setTimeout(() => { slides[slideIndex-1].classList.add("active"); }, 50);
+            dots[slideIndex-1].className += " active-dot";
+        }
+
+        let autoSlideIndex = 0;
+        let autoPlayTimer = setTimeout(autoPlay, 3000); 
+        function autoPlay() {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                slides[i].classList.remove("active");
+            }
+            autoSlideIndex++;
+            if (autoSlideIndex > slides.length) {autoSlideIndex = 1}
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+            slides[autoSlideIndex-1].style.display = "block";
+            setTimeout(() => { slides[autoSlideIndex-1].classList.add("active"); }, 50);
+            dots[autoSlideIndex-1].className += " active-dot";
+            autoPlayTimer = setTimeout(autoPlay, 3000); 
+        }
+
+        // YouTube 播放器控制邏輯 (已換成你的音樂 bTtNV6hgDno)
+        let player;
+        let isPlaying = false;
+        const musicStatus = document.getElementById('music-status');
+        const musicIcon = document.getElementById('m-icon');
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'bTtNV6hgDno', // 👈 已設定為你的 YouTube 歌曲 ID
+                playerVars: {
+                    'autoplay': 0,
+                    'loop': 1,
+                    'playlist': 'bTtNV6hgDno' // 循環播放需要與 videoId 相同
+                }
+            });
+        }
+
+        function toggleMusic() {
+            if (!player || typeof player.playVideo !== 'function') {
+                alert("播放器尚在載入中，請稍候再試一次！");
+                return;
+            }
+
+            if (!isPlaying) {
+                player.playVideo();
+                musicStatus.innerText = "暫停音樂";
+                musicIcon.classList.remove('paused');
+                isPlaying = true;
+            } else {
+                player.pauseVideo();
+                musicStatus.innerText = "播放音樂";
+                musicIcon.classList.add('paused');
+                isPlaying = false;
+            }
+        }
+    </script>
+</body>
+</html>
