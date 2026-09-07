@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>育政&華的婚禮邀請函</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-sage: #a3bfa8;      
@@ -120,11 +120,21 @@
         .fancy-title::after { margin-left: 15px; }
 
         .divider { width: 60px; height: 4px; background-color: var(--color-rose); margin: 15px auto 40px auto; border-radius: 2px; }
-        .invitation-text { font-size: 1.4rem; color: var(--text-light); margin-bottom: 30px; font-weight: 400; }
+        
+        /* 溫暖柔和的 Invitation 文字排版 */
+        .invitation-text { 
+            font-size: 1.25rem; 
+            font-weight: 300;
+            line-height: 2.2;
+            letter-spacing: 1.5px;
+            color: var(--text-light); 
+            margin-bottom: 30px; 
+        }
 
         .bg-sage { background-color: var(--color-sage); color: var(--white); }
         .bg-sage h2 { color: var(--white); }
-        .bg-sage .invitation-text { color: rgba(255,255,255,0.9); }
+        /* 調整綠色背景下的內文顏色，讓視覺更溫潤柔和 */
+        .bg-sage .invitation-text { color: #fefdf8; font-weight: 300; }
         .bg-sage .divider { background-color: var(--white); }
 
         .bg-cream { background-color: var(--color-cream); }
@@ -295,9 +305,8 @@
         <span id="music-status">播放音樂</span>
     </div>
 
-    <!-- YouTube 隱藏播放器與 API -->
+    <!-- YouTube 隱藏播放器 -->
     <div id="youtube-player" style="display:none;"></div>
-    <script src="https://www.youtube.com/iframe_api"></script>
 
     <!-- 封面 Banner 區塊 -->
     <header class="hero">
@@ -481,21 +490,22 @@
             autoPlayTimer = setTimeout(autoPlay, 3000); 
         }
 
-        // YouTube 播放器控制邏輯 (已換成你的音樂 bTtNV6hgDno)
+        // YouTube 播放器控制邏輯 (修正 API 載入觸發)
         let player;
         let isPlaying = false;
         const musicStatus = document.getElementById('music-status');
         const musicIcon = document.getElementById('m-icon');
 
+        // 當 YouTube API 準備好時會自動呼叫這個全域函式
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
                 height: '0',
                 width: '0',
-                videoId: 'bTtNV6hgDno', // 👈 已設定為你的 YouTube 歌曲 ID
+                videoId: 'bTtNV6hgDno', 
                 playerVars: {
                     'autoplay': 0,
                     'loop': 1,
-                    'playlist': 'bTtNV6hgDno' // 循環播放需要與 videoId 相同
+                    'playlist': 'bTtNV6hgDno'
                 }
             });
         }
@@ -519,5 +529,7 @@
             }
         }
     </script>
+    <!-- 載入 YouTube Iframe API 核心 script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
