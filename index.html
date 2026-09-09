@@ -553,18 +553,7 @@
             }
         }
 
-        // === 自動追蹤 Google 表單高度變化，換頁時自動帶回表單頂部 ===
-        window.addEventListener('message', function(event) {
-            if (event.origin.includes('docs.google.com')) {
-                // 當 Google 表單因為換頁或送出而改變高度時，輕柔地將畫面滾動到 RSVP 出席確認區塊的頂端
-                const rsvpSection = document.getElementById('rsvp');
-                if (rsvpSection) {
-                    // 取得目前捲動位置，避免每次微調高度都強制往回拉
-                    // 我們可以利用計時器或直接平滑滾動到表單開頭
-                    rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
+       
     </script>
     <!-- 載入 YouTube Iframe API 核心 script -->
     <script src="https://www.youtube.com/iframe_api"></script>
