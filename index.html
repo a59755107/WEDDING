@@ -534,7 +534,7 @@
             });
         }
 
-        function toggleMusic() {
+       function toggleMusic() {
             if (!player || typeof player.playVideo !== 'function') {
                 alert("播放器尚在載入中，請先等 3 至 5 秒，或嘗試點擊「暫停」後再按一次播放喔");
                 return;
@@ -552,11 +552,19 @@
                 isPlaying = false;
             }
         }
-        // === 新增：讓 Google 表單點擊下一頁或送出後自動將畫面帶回表單頂部 ===
-        window.addEventListener('message', function(e) {
-            if (e.origin && e.origin.includes('docs.google.com')) {
-                // 當收到 Google 表單的高度或狀態改變訊息時，可確保畫面不會卡在底部
-                // 如果需要更強力的自動回頂部，也可以在這裡處理
+
+        // === 自動追蹤 Google 表單高度變化，換頁時自動帶回表單頂部 ===
+        window.addEventListener('message', function(event) {
+            if (event.origin.includes('docs.google.com')) {
+                // 當 Google 表單因為換頁或送出而改變高度時，輕柔地將畫面滾動到 RSVP 出席確認區塊的頂端
+                const rsvpSection = document.getElementById('rsvp');
+                if (rsvpSection) {
+                    // 取得目前捲動位置，避免每次微調高度都強制往回拉
+                    // 我們可以利用計時器或直接平滑滾動到表單開頭
+                    rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
     </script>
     <!-- 載入 YouTube Iframe API 核心 script -->
     <script src="https://www.youtube.com/iframe_api"></script>
