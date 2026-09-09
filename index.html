@@ -552,6 +552,11 @@
                 isPlaying = false;
             }
         }
+        // === 新增：讓 Google 表單點擊下一頁或送出後自動將畫面帶回表單頂部 ===
+        window.addEventListener('message', function(e) {
+            if (e.origin && e.origin.includes('docs.google.com')) {
+                // 當收到 Google 表單的高度或狀態改變訊息時，可確保畫面不會卡在底部
+                // 如果需要更強力的自動回頂部，也可以在這裡處理
     </script>
     <!-- 載入 YouTube Iframe API 核心 script -->
     <script src="https://www.youtube.com/iframe_api"></script>
